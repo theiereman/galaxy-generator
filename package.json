@@ -1,0 +1,17 @@
+{
+  "name": "galaxy-generator",
+  "version": "1.0.0",
+  "description": "Sandbox website to create a galaxy",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "three": "^0.171.0",
+    "vite": "^6.0.3"
+  }
+}
