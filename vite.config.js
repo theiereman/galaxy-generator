@@ -2,7 +2,7 @@ import ViteRestart from "vite-plugin-restart";
 
 export default {
   root: "src/",
-  publicDir: "../static/",
+  publicDir: "../public",
   server: {
     open: true,
   },
