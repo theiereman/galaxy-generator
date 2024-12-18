@@ -3,14 +3,79 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import GUI from "lil-gui";
 import "./style.css";
 
-/**
- * Base
- */
 // Debug
 const gui = new GUI();
 
 // Canvas
 const canvas = document.querySelector("canvas.webgl");
+
+//Textures
+const textureLoader = new THREE.TextureLoader();
+
+const planet1Color = textureLoader.load(
+  "./static/textures/grass-patchy/color.jpg"
+);
+planet1Color.colorSpace = THREE.SRGBColorSpace;
+planet1Color.wrapS = THREE.RepeatWrapping;
+planet1Color.wrapT = THREE.RepeatWrapping;
+planet1Color.repeat.set(10, 10);
+
+const planet1Normal = textureLoader.load(
+  "./static/textures/grass-patchy/normal.jpg"
+);
+const planet1Roughness = textureLoader.load(
+  "./static/textures/grass-patchy/roughness.jpg"
+);
+const planet1Metalness = textureLoader.load(
+  "./static/textures/grass-patchy/metalness.jpg"
+);
+const planet1Ao = textureLoader.load("./static/textures/grass-patchy/ao.jpg");
+
+const planet2Color = textureLoader.load(
+  "./static/textures/ground-wood/color.jpg"
+);
+planet2Color.colorSpace = THREE.SRGBColorSpace;
+planet2Color.wrapS = THREE.RepeatWrapping;
+planet2Color.wrapT = THREE.RepeatWrapping;
+planet2Color.repeat.set(10, 10);
+
+const planet2Normal = textureLoader.load(
+  "./static/textures/ground-wood/normal.jpg"
+);
+const planet2Roughness = textureLoader.load(
+  "./static/textures/ground-wood/roughness.jpg"
+);
+const planet2Metalness = textureLoader.load(
+  "./static/textures/ground-wood/metalness.jpg"
+);
+const planet2Ao = textureLoader.load("./static/textures/ground-wood/ao.jpg");
+const planet2Displacement = textureLoader.load(
+  "./static/textures/ground-wood/disp.jpg"
+);
+
+const planet3Color = textureLoader.load(
+  "./static/textures/metal-corroded/color.jpg"
+);
+planet3Color.colorSpace = THREE.SRGBColorSpace;
+planet3Color.wrapS = THREE.RepeatWrapping;
+planet3Color.wrapT = THREE.RepeatWrapping;
+planet3Color.repeat.set(10, 10);
+
+const planet3Normal = textureLoader.load(
+  "./static/textures/metal-corroded/normal.jpg"
+);
+const planet3Roughness = textureLoader.load(
+  "./static/textures/metal-corroded/roughness.jpg"
+);
+const planet3Metalness = textureLoader.load(
+  "./static/textures/metal-corroded/metalness.jpg"
+);
+const planet3Ao = textureLoader.load("./static/textures/metal-corroded/ao.jpg");
+const planet3Displacement = textureLoader.load(
+  "./static/textures/metal-corroded/disp.jpg"
+);
+
+const planetColors = [planet1Color, planet2Color, planet3Color];
 
 // Scene
 const scene = new THREE.Scene();
@@ -18,7 +83,7 @@ const scene = new THREE.Scene();
 let parameters = {
   count: 60000,
   size: 0.01,
-  radius: 8,
+  radius: 12,
   branches: 5,
   spin: 0.6,
   randomness: 3,
@@ -29,6 +94,40 @@ let parameters = {
 let geometry = null;
 let material = null;
 let points = null;
+
+let planets = [];
+const planetsGroup = new THREE.Group();
+scene.add(planetsGroup);
+
+const addPlanet = () => {
+  //sphere mesh looking like a planet
+  const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+  const sphereMaterial = new THREE.MeshStandardMaterial({
+    map: planetColors[Math.floor(Math.random() * planetColors.length)],
+  });
+
+  const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+
+  //add a planet randomly on the galaxy plane
+  const randomX =
+    (Math.random() > 0.5 ? 1 : -1) * Math.random() * parameters.radius;
+  const randomZ =
+    (Math.random() > 0.5 ? 1 : -1) * Math.random() * parameters.radius;
+  const randomY = (Math.random() > 0.5 ? 1 : -1) * Math.random() * 0.05;
+
+  sphere.position.set(randomX, randomY, randomZ);
+  planets.push(sphere);
+  planetsGroup.add(sphere);
+};
+
+const resetPlanets = () => {
+  planets.forEach((planet) => {
+    planet.geometry.dispose();
+    planet.material.dispose();
+    planetsGroup.remove(planet);
+  });
+  planets = [];
+};
 
 const generateGalaxy = () => {
   if (points) {
@@ -42,7 +141,6 @@ const generateGalaxy = () => {
     size: parameters.size,
     sizeAttenuation: true,
     blending: THREE.AdditiveBlending,
-    depthWrite: false,
     vertexColors: true,
   });
 
@@ -88,10 +186,12 @@ const generateGalaxy = () => {
     colors[i3 + 2] = mixedColor.b;
   }
 
-  console.log(colors);
-
   geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
   geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+
+  const galaxyCenterLight = new THREE.PointLight(parameters.insideColor, 100);
+  galaxyCenterLight.position.set(0, 0, 0);
+  scene.add(galaxyCenterLight);
 
   points = new THREE.Points(geometry, material);
   scene.add(points);
@@ -179,6 +279,13 @@ scene.add(camera);
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 
+document.querySelector("#create-planet").addEventListener("click", (e) => {
+  addPlanet();
+});
+
+document.querySelector("#reset-planet").addEventListener("click", (e) => {
+  resetPlanets();
+});
 /**
  * Renderer
  */
@@ -199,11 +306,14 @@ const tick = () => {
   const rotationX = Math.cos(elapsedTime / 10) / 20;
   const rotationZ = Math.sin(elapsedTime / 10) / 20;
   const rotationY = elapsedTime / 50;
-  console.log(rotationX);
 
   points.rotation.x = rotationX;
   points.rotation.z = rotationZ;
   points.rotation.y = rotationY;
+
+  planetsGroup.rotation.x = rotationX;
+  planetsGroup.rotation.z = rotationZ;
+  planetsGroup.rotation.y = rotationY;
 
   // Update controls
   controls.update();

@@ -33,8 +33,6 @@ body {
   background-color: #151324;
   padding: 0.5em;
   border-bottom-right-radius: 1rem;
-  border-top: 0;
-  border-left: 0;
 }
 
 #title::before {
@@ -62,6 +60,7 @@ body {
 }
 
 .main-frame {
+  position: relative;
   width: 100%;
   height: 100%;
   border-radius: 10rem;
@@ -71,4 +70,60 @@ body {
 .webgl {
   border-radius: 2rem;
   z-index: 1;
+}
+
+#control-panel {
+  display: flex;
+  gap: 1rem;
+  position: absolute;
+  padding: 1rem;
+  padding-left: 1.2rem;
+  padding-right: 1.2rem;
+  align-items: center;
+  bottom: 0;
+  height: 5rem;
+  right: 10%;
+  background-color: #151324;
+  border-top-left-radius: 2rem;
+  border-top-right-radius: 2rem;
+}
+
+#control-panel::before {
+  position: absolute;
+  content: "";
+  background-color: transparent;
+  left: -2rem;
+  bottom: 0;
+  height: 2rem;
+  width: 2rem;
+  border-bottom-right-radius: 1rem;
+  box-shadow: 10px 10px 0 0 #151324;
+}
+
+#control-panel::after {
+  position: absolute;
+  content: "";
+  background-color: transparent;
+  right: -2rem;
+  bottom: 0;
+  height: 2rem;
+  width: 2rem;
+  border-bottom-left-radius: 1rem;
+  box-shadow: -10px 10px 0 0 #151324;
+}
+
+.btn {
+  background-color: #151324;
+  color: #ddf0ff;
+  border: none;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn:hover {
+  background-color: #ddf0ff;
+  color: #151324;
 }
