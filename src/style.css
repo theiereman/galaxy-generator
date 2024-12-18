@@ -1,0 +1,74 @@
+@font-face {
+  font-family: "Mona Sans";
+  src: url("./assets/fonts/Mona-Sans.woff2") format("woff2 supports variations"),
+    url("./assets/fonts/Mona-Sans.woff2") format("woff2-variations");
+  font-weight: 200 900;
+  font-stretch: 75% 125%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  padding: 1rem;
+  background-color: #151324;
+  display: flex;
+  flex-direction: column;
+  color: #ddf0ff;
+  font-family: "Mona Sans", sans-serif;
+}
+
+#title {
+  font-weight: bold;
+  position: absolute;
+  background-color: #151324;
+  padding: 0.5em;
+  border-bottom-right-radius: 1rem;
+  border-top: 0;
+  border-left: 0;
+}
+
+#title::before {
+  position: absolute;
+  content: "";
+  background-color: transparent;
+  left: 0;
+  bottom: -2rem;
+  height: 2rem;
+  width: 2rem;
+  border-top-left-radius: 1rem;
+  box-shadow: -10px -10px 0 0 #151324;
+}
+
+#title::after {
+  position: absolute;
+  content: "";
+  background-color: transparent;
+  right: -2rem;
+  top: 0;
+  height: 2rem;
+  width: 2rem;
+  border-top-left-radius: 1rem;
+  box-shadow: -10px -10px 0 0 #151324;
+}
+
+.main-frame {
+  width: 100%;
+  height: 100%;
+  border-radius: 10rem;
+  border: black;
+}
+
+.webgl {
+  border-radius: 2rem;
+  z-index: 1;
+}
